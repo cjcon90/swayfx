@@ -950,6 +950,11 @@ static void arrange_output(struct sway_output *output, int width, int height) {
 		}
 
 		if (activated) {
+			// Paths like output re-enable skip the switch logic above and can leave alpha at 0
+			if (!animating) {
+				child->animation_state.from_alpha = 1.0f;
+				child->animation_state.to_alpha = 1.0f;
+			}
 			struct sway_container *fs = child->current.fullscreen;
 			wlr_scene_node_set_enabled(&child->layers.tiling->node, !fs);
 			wlr_scene_node_set_enabled(&child->layers.fullscreen->node, fs);
